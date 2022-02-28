@@ -15,16 +15,13 @@ public class InstructorTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String instructor;
-    @Column(name = "course_id")
-    private long courseId;
 
-    public InstructorTable(String instructor, long courseId ) {
+    public InstructorTable(long id, String instructor) {
+        this.id = id;
         this.instructor = instructor;
-        this.courseId = courseId;
     }
 
-
-    public Instructor toInstructor(){
-        return new Instructor(this.instructor,this.courseId);
+    public Instructor toInstructor() {
+        return new Instructor(this.id, this.instructor);
     }
 }

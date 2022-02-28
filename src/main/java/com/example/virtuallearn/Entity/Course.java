@@ -20,8 +20,12 @@ public class Course {
     @NotNull
     private final long categoryId;
     private String category;
+    @NotNull
+    private final long instructorId;
+    private String instructor;
+
 
     public CourseTable toCourseTable() {
-        return new CourseTable(this.id,this.course,this.overview,this.category,this.categoryId);
+        return new CourseTable(this.id,this.course,this.overview,this.category,this.categoryId, this.instructor,this.instructorId);
     }
 }

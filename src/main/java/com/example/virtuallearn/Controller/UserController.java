@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -50,7 +51,7 @@ public class UserController {
     @PostMapping("/getotp")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Long> getotp(@RequestBody @Valid Otp otp) throws JsonProcessingException {
-        log.info("received getotp request", objectMapper.writeValueAsString(otp));
+        log.info("Received getotp request", objectMapper.writeValueAsString(otp));
         return new ResponseWrapper(ResultInfoConstants.OTP_SENT, userService.getotp(otp));
     }
 
@@ -58,7 +59,7 @@ public class UserController {
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Long> signUp(@RequestBody @Valid User user) throws JsonProcessingException {
-        log.info("received signup request {}", objectMapper.writeValueAsString(user));
+        log.info("Received signup request {}", objectMapper.writeValueAsString(user));
         return new ResponseWrapper(ResultInfoConstants.SIGNUP_SUCCESS, userService.signUp(user));
     }
 
@@ -66,7 +67,7 @@ public class UserController {
     @PostMapping("/profile/{phonenumber}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> profile(@RequestBody @Valid User user, @PathVariable Long phonenumber) throws JsonProcessingException {
-        log.info("received profile update request {}", objectMapper.writeValueAsString(user));
+        log.info("Received profile update request {}", objectMapper.writeValueAsString(user));
         userService.profile(user, phonenumber);
         return new ResponseWrapper(ResultInfoConstants.PROFILE_UPDATED, true);
     }
@@ -75,23 +76,23 @@ public class UserController {
     @PutMapping("/edit")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> editProfile(@RequestBody @Valid User user, HttpServletRequest request) throws JsonProcessingException {
-        log.info("received profile edit request {}", objectMapper.writeValueAsString(user));
+        log.info("Received profile edit request {}", objectMapper.writeValueAsString(user));
         userService.editProfile(user, getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.PROFILE_EDITED, true);
     }
 
     @GetMapping("/all/categories")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseWrapper<List<Category>> getAllCategories() {
+    public ResponseWrapper<List<Category>> getAllCategories(Pageable page) {
         log.info("Received a request to get all Categories");
-        return new ResponseWrapper(ResultInfoConstants.SUCCESS, userService.getAllCategories());
+        return new ResponseWrapper(ResultInfoConstants.SUCCESS, userService.getAllCategories(page));
     }
 
     @GetMapping("/all/courses")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseWrapper<List<Course>> getAllCourses() {
+    public ResponseWrapper<List<Course>> getAllCourses(Pageable page) {
         log.info("Received a request to get all Courses");
-        return new ResponseWrapper(ResultInfoConstants.SUCCESS, userService.getAllCourses());
+        return new ResponseWrapper(ResultInfoConstants.SUCCESS, userService.getAllCourses(page));
     }
 
     @GetMapping("/category/category_id/{categoryId}")
@@ -112,14 +113,14 @@ public class UserController {
     @GetMapping({"/privacy_policy"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<List<PrivacyPolicy>> getPrivacyPolicy() throws JsonProcessingException {
-        log.info("received request to get privacy policy");
+        log.info("Received request to get privacy policy");
         return new ResponseWrapper(ResultInfoConstants.PRIVACY_POLICY,userService.getPrivacyPolicy());
     }
 
     @GetMapping({"/terms_of_services"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<List<TermsOfServices>> getTermsOfServices() throws  JsonProcessingException {
-        log.info("received request to get terms of services");
+        log.info("Received request to get terms of services");
         return new ResponseWrapper(ResultInfoConstants.TERMS_OF_SERVICES,userService.getTermsOfServices());
     }
 
@@ -135,7 +136,7 @@ public class UserController {
     @PostMapping("/privacy")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> privacy(@RequestBody @Valid User user, HttpServletRequest request) throws JsonProcessingException {
-        log.info("received profile update request {}", objectMapper.writeValueAsString(user));
+        log.info("Received profile update request {}", objectMapper.writeValueAsString(user));
         userService.privacy(user,getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.PROFILE_UPDATED,true);
     }
@@ -144,7 +145,7 @@ public class UserController {
     @PostMapping("/forgot_password")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Long> forgot(@RequestBody @Valid Otp otp) throws JsonProcessingException {
-        log.info("received forgot password request {}", objectMapper.writeValueAsString(otp));
+        log.info("Received forgot password request {}", objectMapper.writeValueAsString(otp));
         return new ResponseWrapper(ResultInfoConstants.OTP_SENT,userService.forgot(otp));
     }
 
@@ -152,7 +153,7 @@ public class UserController {
     @PostMapping("/reset")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Long> reset(@RequestBody @Valid User user) throws JsonProcessingException {
-        log.info("received reset password request {}", objectMapper.writeValueAsString(user));
+        log.info("Received reset password request {}", objectMapper.writeValueAsString(user));
         return new ResponseWrapper(ResultInfoConstants.RESET_PASSWORD_SUCCESS, userService.reset(user));
     }
 
@@ -202,7 +203,7 @@ public class UserController {
     @GetMapping({"/mycourse"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<List<MyCourses>> mycourse(HttpServletRequest request) {
-        log.info("Received a request to get result of the question : {}", getUser.getId(request));
+        log.info("Received a request to get all the chosen courses : {}", getUser.getId(request));
         List<MyCourses> myCourse = userService.mycourse(getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.SUCCESS, myCourse);
     }
@@ -226,7 +227,7 @@ public class UserController {
     @PostMapping({"/logout"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> logout(@RequestBody @Valid Blacklist blacklist){
-        log.info("logout success : {}",blacklist);
+        log.info("Logout success : {}",blacklist);
         userService.logout(blacklist);
         return new ResponseWrapper(ResultInfoConstants.LOGOUT,true);
     }
@@ -242,7 +243,7 @@ public class UserController {
     @GetMapping({"/mycourse/completed"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<List<Ongoing>> completed(HttpServletRequest request) {
-        log.info("Received a request to get completed course : {}", getUser.getId(request));
+        log.info("Received a request to get completed courses : {}", getUser.getId(request));
         List<Ongoing> myCourse = userService.completed(getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.SUCCESS, myCourse);
     }
@@ -258,21 +259,21 @@ public class UserController {
     @GetMapping({"/help/reply"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<List<Helps>> getByContent(HttpServletRequest request){
-        log.info("Received a request to get instructor by course : {}",getUser.getId(request));
+        log.info("Received a request to get reply to posted question : {}",getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.SUCCESS,userService.getHelpReply(getUser.getId(request)));
     }
 
     @GetMapping({"/mark"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<List> getMark(HttpServletRequest request,@RequestHeader long courseId,@RequestHeader long chapterId){
-        log.info("Received a request to get instructor by course : {}",getUser.getId(request));
+        log.info("Received a request to get marks: {}",getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.SUCCESS,userService.getMark(getUser.getId(request),courseId,chapterId));
     }
 
     @GetMapping({"/notification"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Notifications> getNotification(HttpServletRequest request){
-        log.info("Received a request to get instructor by course : {}",getUser.getId(request));
+        log.info("Received a request to get notifications : {}",getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.SUCCESS,userService.getNotification(getUser.getId(request)));
     }
 }

@@ -16,4 +16,6 @@ public class Courses {
     private final String course;
     @NotBlank
     private final String category;
+    @NotBlank
+    private final String instructor;
 }

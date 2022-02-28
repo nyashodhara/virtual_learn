@@ -68,7 +68,7 @@ public class AdminController {
     @PostMapping("/insert_category")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> insert(@RequestBody @Valid Category category, HttpServletRequest request) throws JsonProcessingException {
-        log.info("received category insert request {}", objectMapper.writeValueAsString(category));
+        log.info("Received category insert request {}", objectMapper.writeValueAsString(category));
         adminService.insert(category, getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.CATEGORY_ADDED,true);
     }
@@ -76,7 +76,7 @@ public class AdminController {
     @PostMapping("/insert_course")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> insertCourse(@RequestBody @Valid Course course,HttpServletRequest request) throws JsonProcessingException {
-        log.info("received course insert request {}", objectMapper.writeValueAsString(course));
+        log.info("Received course insert request {}", objectMapper.writeValueAsString(course));
         adminService.insertCourse(course,getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.COURSE_ADDED,true);
     }
@@ -84,7 +84,7 @@ public class AdminController {
     @PostMapping("/insert_chapter")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> insertChapter(@RequestBody @Valid Chapter chapter,HttpServletRequest request) throws JsonProcessingException {
-        log.info("received chapter insert request {}", objectMapper.writeValueAsString(chapter));
+        log.info("Received chapter insert request {}", objectMapper.writeValueAsString(chapter));
         adminService.insertChapter(chapter,getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.CHAPTER_ADDED,true);
     }
@@ -92,7 +92,7 @@ public class AdminController {
     @PostMapping("/insert_policy")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> insertPolicy(@RequestBody @Valid PrivacyPolicy privacyPolicy,HttpServletRequest request) throws JsonProcessingException {
-        log.info("received request to insert privacy policy{}", objectMapper.writeValueAsString(privacyPolicy));
+        log.info("Received request to insert privacy policy{}", objectMapper.writeValueAsString(privacyPolicy));
         adminService.insertPrivacyPolicy(privacyPolicy,getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.PRIVACY_POLICY_ADDED, true);
     }
@@ -100,7 +100,7 @@ public class AdminController {
     @PostMapping("/insert_terms")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> insertTerms(@RequestBody @Valid TermsOfServices termsOfServices,HttpServletRequest request) throws JsonProcessingException {
-        log.info("received request to insert terms of services{}", objectMapper.writeValueAsString(termsOfServices));
+        log.info("Received request to insert terms of services{}", objectMapper.writeValueAsString(termsOfServices));
         adminService.insertTermsOfService(termsOfServices,getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.TERMS_OF_SERVICES_ADDED, true);
     }
@@ -108,7 +108,7 @@ public class AdminController {
     @PostMapping("/insert_content")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> insertContent(@RequestBody @Valid ChapterContent chapterContent,HttpServletRequest request) throws JsonProcessingException {
-        log.info("received request to insert content of the chapter", objectMapper.writeValueAsString(chapterContent));
+        log.info("Received request to insert content of the chapter", objectMapper.writeValueAsString(chapterContent));
         adminService.insertContent(chapterContent,getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.CONTENT_ADDED, true);
     }
@@ -117,7 +117,7 @@ public class AdminController {
     @PostMapping("/insert_test")
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> insertTest(@RequestBody @Valid Test test,HttpServletRequest request) throws JsonProcessingException {
-        log.info("received request to insert test of the chapter", objectMapper.writeValueAsString(test));
+        log.info("Received request to insert test of the chapter", objectMapper.writeValueAsString(test));
         adminService.insertTest(test,getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.TEST_ADDED, true);
     }
@@ -125,15 +125,15 @@ public class AdminController {
     @PostMapping({"/logout"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseWrapper<Boolean> logout(@RequestBody @Valid Blacklist blacklist){
-        log.info("logout success : {}",blacklist);
+        log.info("Logout success : {}",blacklist);
         adminService.logout(blacklist);
         return new ResponseWrapper(ResultInfoConstants.LOGOUT,true);
     }
 
     @GetMapping({"/help"})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseWrapper<List<Helps>> getByContent(HttpServletRequest request){
-        log.info("Received a request to get instructor by course : {}",getUser.getId(request));
+    public ResponseWrapper<List<Helps>> getHelpReply(HttpServletRequest request){
+        log.info("Received a request to get doubt answers : {}",getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.SUCCESS,adminService.getHelpReply(getUser.getId(request)));
     }
 
@@ -147,8 +147,8 @@ public class AdminController {
 
     @PostMapping("/insert_instructor")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseWrapper<Boolean> insertinstructor(@RequestBody @Valid Instructor instructor, HttpServletRequest request) throws JsonProcessingException {
-        log.info("received instructor insert request {}", objectMapper.writeValueAsString(instructor));
+    public ResponseWrapper<Boolean> insertInstructor(@RequestBody @Valid Instructor instructor, HttpServletRequest request) throws JsonProcessingException {
+        log.info("Received instructor insert request {}", objectMapper.writeValueAsString(instructor));
         adminService.insertInstructor(instructor,getUser.getId(request));
         return new ResponseWrapper(ResultInfoConstants.SUCCESS,true);
     }

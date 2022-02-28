@@ -11,6 +11,7 @@ import com.example.virtuallearn.UserAuthorisation.JWTUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.passay.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -283,15 +284,15 @@ public class UserService {
 
     }
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll()
+    public List<Category> getAllCategories(Pageable page) {
+        return categoryRepository.findAll(page)
                 .stream()
                 .map(CategoryTable::toCategory)
                 .collect(Collectors.toList());
     }
 
-    public List<Courses> getAllCourses() {
-        return courseRepository.findAll()
+    public List<Courses> getAllCourses(Pageable page) {
+        return courseRepository.findAll(page)
                 .stream()
                 .map(CourseTable::toCourses)
                 .collect(Collectors.toList());

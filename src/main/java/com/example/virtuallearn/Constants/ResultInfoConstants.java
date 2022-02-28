@@ -59,7 +59,9 @@ public class ResultInfoConstants {
     public static final ResultInfo EMPTY_ONGOING = new ResultInfo("There is no ongoing/completed courses");;;
     public static final ResultInfo EMPTY_CHAT = new ResultInfo("Your chat is empty");
     public static final ResultInfo COURSE_IS_ALREADY_ASSIGNED_WITH_INSTRUCTOR = new ResultInfo("COURSE_IS_ALREADY_ASSIGNED_WITH_INSTRUCTOR") ;
-    public static final ResultInfo EMPTY_NOTIFICATION = new ResultInfo("Your Notification is empty");;
+    public static final ResultInfo EMPTY_NOTIFICATION = new ResultInfo("Your Notification is empty");
+    public static final ResultInfo INSTRUCTOR_ALREADY_EXISTS = new ResultInfo("INSTRUCTOR_ALREADY_EXISTS");
+    public static final ResultInfo NO_SUCH_INSTRUCTOR = new ResultInfo("NO_SUCH_INSTRUCTOR");
 }
 
 

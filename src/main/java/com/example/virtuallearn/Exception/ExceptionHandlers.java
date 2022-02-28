@@ -30,4 +30,11 @@ public class ExceptionHandlers {
     public ResponseWrapper categoryNotFoundException(CategoryNotFoundException categoryNotFoundException) {
         return new ResponseWrapper(categoryNotFoundException.getResult(), null);
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseWrapper notFoundException(NotFoundException notFoundException) {
+        return new ResponseWrapper(notFoundException.getResult(), null);
+    }
 }
