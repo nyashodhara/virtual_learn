@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionHandlers {
 
-    @ExceptionHandler(PhoneNumberAlreadyExistException.class)
+    @ExceptionHandler(AlreadyExistException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseWrapper handlePhoneNumberAlreadyExistException(PhoneNumberAlreadyExistException phoneNumberAlreadyExistException) {
-        return new ResponseWrapper(phoneNumberAlreadyExistException.getResult(), null);
+    public ResponseWrapper handleAlreadyExistException(AlreadyExistException alreadyExistException) {
+        return new ResponseWrapper(alreadyExistException.getResult(), null);
     }
 
     @ExceptionHandler(EnterValidCredentialException.class)
