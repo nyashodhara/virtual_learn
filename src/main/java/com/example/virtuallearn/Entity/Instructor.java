@@ -4,13 +4,18 @@ import com.example.virtuallearn.Repository.Table.InstructorTable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Data
 @AllArgsConstructor
 public class Instructor {
+    @NotNull
+    private final long id;
+    @NotBlank
     private final String instructor;
-    private final long courseId;
 
     public InstructorTable toInstructorTable() {
-        return new  InstructorTable(this.instructor,this.courseId);
+        return new InstructorTable(this.id,this.instructor);
     }
 }

@@ -2,8 +2,9 @@ package com.example.virtuallearn.Service;
 
 import com.example.virtuallearn.Constants.ResultInfoConstants;
 import com.example.virtuallearn.Entity.*;
+import com.example.virtuallearn.Exception.AlreadyExistException;
 import com.example.virtuallearn.Exception.EnterValidCredentialException;
-import com.example.virtuallearn.Exception.PhoneNumberAlreadyExistException;
+import com.example.virtuallearn.Exception.NotFoundException;
 import com.example.virtuallearn.Repository.*;
 import com.example.virtuallearn.Repository.Table.*;
 import com.example.virtuallearn.UserAuthorisation.JWTUtility;
@@ -11,11 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,7 +52,7 @@ public class AdminService {
         UserTable userTable = userRepository.getUserByPhoneNumber(phoneNumber);
         if (userTable != null) {
             log.warn("phone number already registered ");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.PHONE_NUMBER_ALREADY_PRESENT);
+            throw new AlreadyExistException(ResultInfoConstants.PHONE_NUMBER_ALREADY_PRESENT);
         }
 
         UserTable saveduserTable = userRepository.getByUsername(user.getUsername());
@@ -78,7 +74,7 @@ public class AdminService {
         CategoryTable categoryTable = categoryRepository.getByCategory(savedCategory);
         if (categoryTable != null) {
             log.warn("category already present ");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.CATEGORY_ALREADY_PRESENT);
+            throw new AlreadyExistException(ResultInfoConstants.CATEGORY_ALREADY_PRESENT);
         }
 
         categoryRepository.save(category.toCategoryTable());
@@ -94,14 +90,22 @@ public class AdminService {
 
         if (category.isEmpty()) {
             log.warn("there is no such category ");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.NO_SUCH_CATEGORY);
+            throw new NotFoundException(ResultInfoConstants.NO_SUCH_CATEGORY);
+        }
+
+        long savedInstructor = course.getInstructorId();
+        List<InstructorTable> instructor = instructorRepository.findByInstructorId(savedInstructor);
+
+        if (instructor.isEmpty()) {
+            log.warn("There is no such Instructor ");
+            throw new NotFoundException(ResultInfoConstants.NO_SUCH_INSTRUCTOR);
         }
 
         String savedCourse = course.getCourse();
         CourseTable courseTable = courseRepository.getByCourse(savedCourse);
         if (courseTable != null) {
             log.warn("course already present ");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.COURSE_ALREADY_PRESENT);
+            throw new AlreadyExistException(ResultInfoConstants.COURSE_ALREADY_PRESENT);
         }
         course.setCategory(category.get(0).getCategory());
         courseRepository.save(course.toCourseTable());
@@ -255,22 +259,15 @@ public class AdminService {
 
     }
 
-    public void insertInstructor(Instructor instructor,String username){
+    public void insertInstructor(Instructor instructor, String username) {
         isAdmin(username);
-
-        long savedCourseId = instructor.getCourseId();
-        Optional<CourseTable> courseTable  = courseRepository.findById(savedCourseId);
-        if (!courseTable.isPresent()){
-            log.warn("there is no such course");
-            throw new EnterValidCredentialException(ResultInfoConstants.NO_SUCH_COURSE);
-        }
-        InstructorTable instructorTable =  instructorRepository.getByCourseId(savedCourseId);
-        if (instructorTable != null){
-            log.warn("course is already assigned to instructor");
-            throw new EnterValidCredentialException(ResultInfoConstants.COURSE_IS_ALREADY_ASSIGNED_WITH_INSTRUCTOR);
+        String savedInstructor = instructor.getInstructor();
+        InstructorTable instructorTable = instructorRepository.getByInstructor(savedInstructor);
+        if (instructorTable != null) {
+            log.warn("Instructor already exists");
+            throw new EnterValidCredentialException(ResultInfoConstants.INSTRUCTOR_ALREADY_EXISTS);
         }
         instructorRepository.save(instructor.toInstructorTable());
-
     }
 }
 

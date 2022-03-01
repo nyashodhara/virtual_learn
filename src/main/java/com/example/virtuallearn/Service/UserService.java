@@ -2,15 +2,16 @@ package com.example.virtuallearn.Service;
 
 import com.example.virtuallearn.Constants.ResultInfoConstants;
 import com.example.virtuallearn.Entity.*;
+import com.example.virtuallearn.Exception.AlreadyExistException;
 import com.example.virtuallearn.Exception.CategoryNotFoundException;
 import com.example.virtuallearn.Exception.EnterValidCredentialException;
-import com.example.virtuallearn.Exception.PhoneNumberAlreadyExistException;
 import com.example.virtuallearn.Repository.*;
 import com.example.virtuallearn.Repository.Table.*;
 import com.example.virtuallearn.UserAuthorisation.JWTUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.passay.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -59,7 +60,7 @@ public class UserService {
         UserTable userTable = userRepository.getUserByPhoneNumber(phoneNumber);
         if (userTable != null) {
             log.warn("phone number already registered ");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.PHONE_NUMBER_ALREADY_PRESENT);
+            throw new AlreadyExistException(ResultInfoConstants.PHONE_NUMBER_ALREADY_PRESENT);
         }
 
         OtpTable otpTable = otpRepository.getUserByPhoneNumber(phoneNumber);
@@ -91,19 +92,19 @@ public class UserService {
         UserTable userTable = userRepository.getUserByPhoneNumber(phoneNumber);
         if (userTable != null) {
             log.warn("phone number already registered ");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.PHONE_NUMBER_ALREADY_PRESENT);
+            throw new AlreadyExistException(ResultInfoConstants.PHONE_NUMBER_ALREADY_PRESENT);
         }
 
         OtpTable otpTable = otpRepository.getUserByPhoneNumber(user.getPhoneNumber());
         if (otpTable == null) {
             log.warn("first request the otp");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.REQUEST_OTP);
+            throw new AlreadyExistException(ResultInfoConstants.REQUEST_OTP);
         }
 
         long savedOtp = otpTable.getOtp();
         if(enteredOtp != savedOtp){
             log.warn("entered otp is wrong please enter the correct otp ");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.WRONG_OTP);
+            throw new AlreadyExistException(ResultInfoConstants.WRONG_OTP);
         }
 
         long id = otpTable.getId();
@@ -180,7 +181,7 @@ public class UserService {
 
         if (userTable == null) {
             log.warn("phone number not registered ");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.PHONE_NUMBER_NOT_EXIST);
+            throw new AlreadyExistException(ResultInfoConstants.PHONE_NUMBER_NOT_EXIST);
         }
 
         OtpTable otpTable = otpRepository.getUserByPhoneNumber(phoneNumber);
@@ -206,13 +207,13 @@ public class UserService {
         OtpTable otpTable = otpRepository.getUserByPhoneNumber(phoneNumber);
         if (otpTable == null) {
             log.warn("first request the otp");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.REQUEST_OTP);
+            throw new AlreadyExistException(ResultInfoConstants.REQUEST_OTP);
         }
 
         long savedOtp = otpTable.getOtp();
         if(enteredOtp != savedOtp){
             log.warn("entered otp is wrong please enter the correct otp ");
-            throw new PhoneNumberAlreadyExistException(ResultInfoConstants.WRONG_OTP);
+            throw new AlreadyExistException(ResultInfoConstants.WRONG_OTP);
         }
         String password = user.getPassword();
         UserTable userTable = userRepository.getUserByPhoneNumber(phoneNumber);
@@ -283,15 +284,15 @@ public class UserService {
 
     }
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll()
+    public List<Category> getAllCategories(Pageable page) {
+        return categoryRepository.findAll(page)
                 .stream()
                 .map(CategoryTable::toCategory)
                 .collect(Collectors.toList());
     }
 
-    public List<Courses> getAllCourses() {
-        return courseRepository.findAll()
+    public List<Courses> getAllCourses(Pageable page) {
+        return courseRepository.findAll(page)
                 .stream()
                 .map(CourseTable::toCourses)
                 .collect(Collectors.toList());

@@ -22,21 +22,27 @@ public class CourseTable {
     private String category;
     @Column(name = "category_id")
     private long categoryId;
+    private String instructor;
+    @Column(name = "instructor_id")
+    private long instructorId;
 
-    public CourseTable(long id,String course,String overview,String category,long categoryId) {
+
+    public CourseTable(long id,String course,String overview,String category,long categoryId, String instructor,long instructorId) {
         this.id = id;
         this.course = course;
         this.overview = overview;
         this.category = category;
         this.categoryId = categoryId;
+        this.instructor = instructor;
+        this.instructorId = instructorId;
     }
 
     public Course toCourse() {
-        return new Course(this.id, this.course, this.overview,this.categoryId, this.category);
+        return new Course(this.id, this.course, this.overview,this.categoryId, this.category, this.instructorId, this.instructor);
     }
 
     public Courses toCourses() {
-        return new Courses(this.id,this.course, this.category);
+        return new Courses(this.id,this.course, this.category, this.instructor);
     }
 
     public Overview toOverview() {
