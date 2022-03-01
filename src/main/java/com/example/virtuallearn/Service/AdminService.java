@@ -108,6 +108,7 @@ public class AdminService {
             throw new AlreadyExistException(ResultInfoConstants.COURSE_ALREADY_PRESENT);
         }
         course.setCategory(category.get(0).getCategory());
+        course.setInstructor(instructor.get(0).getInstructor());
         courseRepository.save(course.toCourseTable());
         Notification notification = new Notification(0,"all","New Course Added - "+course.getCourse());
         notificationRepository.save(notification.toNotificationTable());
